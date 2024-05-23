@@ -46,7 +46,7 @@ app.UseCors(options => options
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "dotnet8_introduction v1"));
 }
 
 app.UseRouting();

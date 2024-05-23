@@ -15,5 +15,7 @@ namespace dotnet8_introduction.Data
 
         Task<Category[]> GetAllCategoriesAsync();
         Task<Category> GetCategoryByIdAsync(int categoryId);
+
+        Task<float> GetAveragePriceAsync();
     }
 }

@@ -42,7 +42,9 @@ namespace dotnet8_introduction.Data
         {
             IQueryable<Category> query = _context.Categories;
             query = query.AsNoTracking().OrderBy(c => c.Id).Where(c => c.Id == categoryId);
+#pragma warning disable CS8603
             return await query.FirstOrDefaultAsync();
+#pragma warning restore CS8603
         }
 
         public async Task<Product> GetProductByIdAsync(int productId, bool includeCategory)
@@ -53,7 +55,9 @@ namespace dotnet8_introduction.Data
                 query = query.Include(p => p.category);
             }
             query = query.AsNoTracking().OrderBy(p => p.Id).Where(p => p.Id == productId);
+#pragma warning disable CS8603
             return await query.FirstOrDefaultAsync();
+#pragma warning restore CS8603
         }
 
         public async Task<bool> SaveChangesAsync()
@@ -64,6 +68,15 @@ namespace dotnet8_introduction.Data
         public void Update<T>(T entity) where T : class
         {
             _context.Update(entity);
+        }
+
+        public async Task<float> GetAveragePriceAsync()
+        {
+            if (!await _context.Products.AnyAsync())
+            {
+                return 0; // Return 0 if not found any product
+            }
+            return await _context.Products.AverageAsync(p => p.Price);
         }
     }
 }

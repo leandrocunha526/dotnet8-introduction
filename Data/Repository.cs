@@ -20,22 +20,30 @@ namespace dotnet8_introduction.Data
             _context.Remove(entity);
         }
 
-        public async Task<Category[]> GetAllCategoriesAsync()
+        public async Task<Category[]> GetAllCategoriesAsync(bool includeProducts)
         {
             IQueryable<Category> query = _context.Categories;
+            if (includeProducts)
+            {
+                query = query.Include(c => c.Products);
+            }
             query = query.AsNoTracking().OrderBy(c => c.Id);
             return await query.ToArrayAsync();
         }
 
-        public async Task<Product[]> GetAllProductsAsync(bool includeCategory)
+        public async Task<IEnumerable<Product>> GetAllProductsAsync(bool includeCategory, int? limit)
         {
             IQueryable<Product> query = _context.Products;
             if (includeCategory)
             {
-                query = query.Include(p => p.category);
+                query = query.Include(p => p.Category);
+            }
+            if (limit.HasValue)
+            {
+                query = query.Take(limit.Value);
             }
             query = query.AsNoTracking().OrderBy(p => p.Id);
-            return await query.ToArrayAsync();
+            return await query.ToListAsync();
         }
 
         public async Task<Category> GetCategoryByIdAsync(int categoryId)
@@ -52,7 +60,7 @@ namespace dotnet8_introduction.Data
             IQueryable<Product> query = _context.Products;
             if (includeCategory)
             {
-                query = query.Include(p => p.category);
+                query = query.Include(p => p.Category);
             }
             query = query.AsNoTracking().OrderBy(p => p.Id).Where(p => p.Id == productId);
 #pragma warning disable CS8603
@@ -77,6 +85,23 @@ namespace dotnet8_introduction.Data
                 return 0; // Return 0 if not found any product
             }
             return await _context.Products.AverageAsync(p => p.Price);
+        }
+
+        public async Task<IEnumerable<Product>> SearchProductsAsync(string searchTerm, bool includeCategory)
+        {
+            IQueryable<Product> query = _context.Products;
+
+            if (includeCategory)
+            {
+                query = query.Include(p => p.Category);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(p => p.Name!.Contains(searchTerm));
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

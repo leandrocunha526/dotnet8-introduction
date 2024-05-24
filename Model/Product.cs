@@ -16,7 +16,9 @@ namespace dotnet8_introduction.Model
         [Required]
         public string? Description { get; set; }
 
+        public Category? Category { get; set; }
+
         [Required]
-        public Category? category { get; set; }
+        public int CategoryId { get; set; }
     }
 }

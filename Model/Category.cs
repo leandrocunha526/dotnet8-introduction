@@ -9,5 +9,7 @@ namespace dotnet8_introduction.Model
 
         [Required]
         public string? Name { get; set; }
+
+        public ICollection<Product>? Products { get; set; }
     }
 }

@@ -15,11 +15,11 @@ namespace dotnet8_introduction.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(bool includeProducts = true)
         {
             try
             {
-                var results = await _repository!.GetAllCategoriesAsync();
+                var results = await _repository!.GetAllCategoriesAsync(includeProducts);
                 return Ok(results);
             }
             catch (Exception)
@@ -58,7 +58,7 @@ namespace dotnet8_introduction.Controllers
                 _repository!.Add(model);
                 if (await _repository.SaveChangesAsync())
                 {
-                    return Ok(model);
+                    return Created($"/api/category/{model.Id}", model);
                 }
             }
             catch (Exception)

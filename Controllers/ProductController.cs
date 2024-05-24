@@ -15,11 +15,15 @@ namespace dotnet8_introduction.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] int? limit)
         {
             try
             {
                 var results = await _repository!.GetAllProductsAsync(includeCategory: true);
+                if (limit.HasValue)
+                {
+                    results = results.Take(limit.Value).ToArray();
+                }
                 return Ok(results);
             }
             catch (Exception)
@@ -70,7 +74,7 @@ namespace dotnet8_introduction.Controllers
                 _repository!.Add(model);
                 if (await _repository.SaveChangesAsync())
                 {
-                    return Ok(model);
+                    return Created($"/api/product/{model.Id}", model);
                 }
             }
             catch (Exception)
@@ -134,6 +138,20 @@ namespace dotnet8_introduction.Controllers
                 );
             }
             return BadRequest();
+        }
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] string searchTerm)
+        {
+            try
+            {
+                var results = await _repository!.SearchProductsAsync(searchTerm, includeCategory: true);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error 500 - Internal Server Error (database error)");
+            }
         }
     }
 }

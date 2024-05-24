@@ -12,24 +12,51 @@ A introduction Web API with Dotnet 8 LTS.
 
 ## TODO
 
-- Authentication
-- AutoMapper use
-- JWT support
+- Authentication [In progress]
+- AutoMapper use [In progress]
+- JWT support [In progress]
+- User login with privacy
 - More features: Manage a buy list
 
 ## Version
 
 - Dotnet 8.0 LTS
 
+SDK version: `dotnet --list-sdks with result 8.0.105 [/usr/share/dotnet/sdk]`
+
 ## SGBD
 
 - SQL Server
+
+## Testing environment
+
+Create a appsettings.Testing.json.
+The Microsoft.EntityFrameworkCore.Sqlite dependency already available in dotnet8-introduction.csproj.
+
+```json
+{
+    "ConnectionStrings": {
+        "SqliteConnection": "Data Source=Testing.db"
+    }
+}
+
+```
+
+NOTE: Edit the Program.cs uncomment the lines.
+
+No build:
+
+`dotnet test --no-build --verbosity normal`
+
+Or with build:
+
+`dotnet test --verbosity normal`
 
 ## To run
 
 `dotnet run`
 
-or
+Or
 
 `dotnet watch run`
 

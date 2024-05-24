@@ -5,9 +5,25 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add environment variables
+//bool isDevelopment = builder.Environment.IsDevelopment() || builder.Environment.EnvironmentName == "Testing";
+
+// Analyze the environment and choose the appropriate database
+//if (isDevelopment)
+//{
+// Use SQL Server in development
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"))
 );
+//}
+//else
+/*{
+    // Use SQLite in production or testing
+    builder.Services.AddDbContext<DataContext>(options =>
+       options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection"))
+   );
+}
+*/
 
 // Add services to the container.
 

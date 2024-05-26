@@ -57,15 +57,14 @@ namespace dotnet8_introduction.Services
 
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                var user = _context?.Users.SingleOrDefault(x => x.Username == username);
+                var user = _context.Users.SingleOrDefault(x => x.Username == username);
 
                 // check if username exists and password is correct
-                if (user != null && VerifyPasswordHash(password, user.Password, user.PasswordSalt))
+                if (user != null && VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 {
                     authenticatedUser = user;
                 }
             }
-
             return authenticatedUser;
         }
 
@@ -74,44 +73,44 @@ namespace dotnet8_introduction.Services
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Password is required");
 
-            if (_context?.Users.Any(x => x.Username == user.Username) == true)
+            if (_context.Users.Any(x => x.Username == user.Username) == true)
                 throw new AppException("Username \"" + user.Username + "\" is already taken");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            user.Password = passwordHash;
+            user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            _context?.Users.Add(user);
-            _context?.SaveChanges();
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
             return user;
         }
 
         public void Delete(int id)
         {
-            var user = _context?.Users.Find(id);
+            var user = _context.Users.Find(id);
             if (user != null)
             {
-                _context?.Users.Remove(user);
-                _context?.SaveChanges();
+                _context.Users.Remove(user);
+                _context.SaveChanges();
             }
         }
 
         public IEnumerable<User> GetAll()
         {
-            return _context!.Users;
+            return _context.Users;
         }
 
         public User GetById(int id)
         {
-            return _context?.Users.Find(id);
+            return _context.Users.Find(id);
         }
 
         public void Update(User user, string password)
         {
-            var userToUpdate = _context?.Users.Find(user.Id);
+            var userToUpdate = _context.Users.Find(user.Id);
 
             if (userToUpdate == null)
                 throw new AppException("User not found");
@@ -119,7 +118,7 @@ namespace dotnet8_introduction.Services
             if (user.Username != userToUpdate.Username)
             {
                 // username has changed so check if the new username is already taken
-                if (_context?.Users.Any(x => x.Username == user.Username) == true)
+                if (_context.Users.Any(x => x.Username == user.Username) == true)
                     throw new AppException("Username " + user.Username + " is already taken");
             }
 
@@ -134,12 +133,12 @@ namespace dotnet8_introduction.Services
                 byte[] passwordHash, passwordSalt;
                 CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-                userToUpdate.Password = passwordHash;
+                userToUpdate.PasswordHash = passwordHash;
                 userToUpdate.PasswordSalt = passwordSalt;
             }
 
-            _context?.Users.Update(userToUpdate);
-            _context?.SaveChanges();
+            _context.Users.Update(userToUpdate);
+            _context.SaveChanges();
         }
     }
 }

@@ -1,14 +1,16 @@
 using dotnet8_introduction.Data;
 using Microsoft.AspNetCore.Mvc;
 using dotnet8_introduction.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace dotnet8_introduction.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : Controller
     {
-        public IRepository? _repository { get; }
+        public IRepository _repository { get; }
         public CategoryController(IRepository repository)
         {
             _repository = repository;

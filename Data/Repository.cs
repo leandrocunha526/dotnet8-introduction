@@ -19,7 +19,6 @@ namespace dotnet8_introduction.Data
         {
             _context.Remove(entity);
         }
-
         public async Task<Category[]> GetAllCategoriesAsync(bool includeProducts)
         {
             IQueryable<Category> query = _context.Categories;
@@ -50,9 +49,7 @@ namespace dotnet8_introduction.Data
         {
             IQueryable<Category> query = _context.Categories;
             query = query.AsNoTracking().OrderBy(c => c.Id).Where(c => c.Id == categoryId);
-#pragma warning disable CS8603
             return await query.FirstOrDefaultAsync();
-#pragma warning restore CS8603
         }
 
         public async Task<Product> GetProductByIdAsync(int productId, bool includeCategory)
@@ -63,9 +60,7 @@ namespace dotnet8_introduction.Data
                 query = query.Include(p => p.Category);
             }
             query = query.AsNoTracking().OrderBy(p => p.Id).Where(p => p.Id == productId);
-#pragma warning disable CS8603
             return await query.FirstOrDefaultAsync();
-#pragma warning restore CS8603
         }
 
         public async Task<bool> SaveChangesAsync()

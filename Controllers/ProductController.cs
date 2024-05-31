@@ -1,14 +1,16 @@
 using dotnet8_introduction.Data;
 using dotnet8_introduction.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet8_introduction.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : Controller
     {
-        public IRepository? _repository { get; }
+        public IRepository _repository { get; }
         public ProductController(IRepository repository)
         {
             _repository = repository;
